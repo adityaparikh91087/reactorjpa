@@ -3,6 +3,7 @@ package com.reactor.jpa.demo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class CustomerService {
@@ -14,6 +15,7 @@ public class CustomerService {
     }
 
     public Flux<Customer> getCustomers(String firstNameContaining){
-        return Flux.fromStream(repository.streamAllByFirstNameContaining(firstNameContaining));
+        return Flux.fromStream(repository.streamAllByFirstNameContaining(firstNameContaining))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 }
